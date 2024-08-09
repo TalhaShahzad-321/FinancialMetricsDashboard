@@ -1,0 +1,292 @@
+FOR UIQUE VALUE
+ALT+A+M
+FOR MAKE FORMULA TO VALUE
+PRESS CTRL + C
+THEN CTRL+ ALT+V
+Jub data clean hojaye tu humei ctrl shift down karna hai aur phir apni last value ka agla row ya column mei ctrl shift down ya right 
+karka value ko delete kardaga sari
+
+Some Imp Stand For
+*EBITDA stands for Earnings Before Interest, Taxes, Depreciation, and Amortization 
+#FORMULA
+EBITDA=Net Income+Interest+Taxes+Depreciation+Amortization
+
+*PBT stands for Profit Before Tax. 
+#FORMULA
+PBT=Revenue−Expenses
+
+*COGS stands for Cost of Goods Sold.
+#FORMULA
+COGS=Beginning Inventory+Purchases During the Period−Ending Inventory
+E.G
+Beginning Inventory: $10,000
+Purchases During the Period: $50,000
+Ending Inventory: $8,000
+The COGS would be calculated as:
+
+COGS=Beginning Inventory+Purchases During the Period−Ending Inventory
+COGS=10,000+50,000−8,000
+COGS=52,000
+
+
+*Gross profit is the money a company makes from selling its products after subtracting the costs directly involved in making those
+ products
+#FORMULA
+Gross Profit=Revenue−Cost of Goods Sold (COGS)
+Example
+Let's say you own a bakery. In one month:
+
+You make $10,000 from selling cakes and pastries (this is your revenue).
+The cost of ingredients, packaging, and labor to make those cakes and pastries is $4,000 (this is your COGS).
+Gross Profit=$10,000−$4,000=$6,000
+
+
+DAX QUERY
+1:To calculate gross profit,First create new column and write this dax on new column
+*Gross Profit = Actual[Net Revenue]) - Actual[COGS]
+#Now create New Measure
+*Gross Profit1 = SUM(Actual[Goss Profit])
+
+2:To calculate Net Revenue,First create new column and write this dax on new column
+*Net Revenue = Actual[Gross Sales] - Actual[Total T & Disc]
+#Now create New Measure
+*Net Revenue = SUM(Actual[Net Revenue])
+
+3:To calculate ETIDA(earnings before interest, taxes, depreciation, and amortizatio),First create new column and write this Dax
+*EBITDA1 = 
+Actual[Goss Profit] - 
+Actual[Marketing] - 
+Actual[S&D] - 
+Actual[G&A] - 
+Actual[Other Inc & Exp] + 
+Actual[Depriciation] + 
+Actual[One Off Item]
+
+#Now create New Measure
+*EBITDA = SUM(Actual[Ebitda])
+
+3:To calculate PAT(profit after tax),First create new column and write this Dax For Net Profit
+*Net Profit= 
+'Actual'[Net Revenue] 
+- 'Actual'[Raw Material] 
+- 'Actual'[Packging Material] 
+- 'Actual'[Total Fixed & Variable Cost] 
+- 'Actual'[Marketing] 
+- 'Actual'[S&D] 
+- 'Actual'[G&A] 
+- 'Actual'[Other Inc & Exp] 
+- 'Actual'[Depriciation] 
+- 'Actual'[One Off Item] 
+- 'Actual'[Tax] 
++ 'Actual'[Interest Income] 
+- 'Actual'[Interest Exp]
+
+#Now create New Measure
+#2 formula are there if we have subtract tax from net profit while calculating net profit then use this dax
+*Pat1 = SUM(Actual[Net Profit])
+#Other wise use this dax
+*PAT = SUM(Actual[Net Profit]) - SUM(Actual[Tax]):
+
+4:To Calculate total volume
+*Total Volume MT = SUM(Actual[Volume Mt])
+
+5:To calculate Operating Expense
+*Operating Expenses = 
+SUM('Actual'[Raw Material]) + 
+SUM('Actual'[Packging Material]) + 
+SUM('Actual'[Total Fixed & Variable Cost]) + 
+SUM('Actual'[Marketing]) + 
+SUM('Actual'[S&D]) + 
+SUM('Actual'[G&A])
+
+
+6:To calculate Non Operating Expense
+*Non-Operating Expenses = SUM('Actual'[Interest Exp])
+
+7:To calculate Operating Income
+*Operating Income = 
+SUM('Actual'[Net Revenue])
+
+8:To calculate Non Operating Income
+*Non-Operating Income = SUM('Actual'[Interest Income])
+
+9:To Calculate Year To Date Net Revenue
+*YTD Net Revenue = 
+TOTALYTD(
+    [Net Revenue], 
+    'Dim Date'[Month End Date],
+    ALL('Dim Date')
+)
+#EXPLANATION'
+SUM('Actual'[Net Revenue]):   Aggregates the Net Revenue.
+TOTALYTD:                     Computes the year-to-date value.
+'Dim Date'[Month End Date]:   The column representing dates.
+ALL('Dim Date'):              Ensures the function considers all date
+Year To Date value is sum of net revenue
+E.G
+Date	Net Revenue
+2024-01-31	1000
+2024-02-28	1500
+2024-03-31	1200
+...	...
+2024-07-31	2000
+If today’s date is July 31, 2024, the YTD Net Revenue would be the sum of Net Revenue from January 1, 2024, to July 31, 2024.
+
+10:To calculate year to year change % in Net Revenue 
+#First We Have To Calculate Previous Year Revenue
+*Previous_Year_Revenue = CALCULATE([Net Revenue],SAMEPERIODLASTYEAR('Dim Date'[Month End Date].[Date]))
+#Now Calculate Year To Year Change
+*YOY_Percetage_Change_In_Revenue = DIVIDE([Net Revenue]-[Previous_Year_Revenue],[Previous_Year_Revenue])
+
+
+11:Write dax to calculate year to date(month to month) Change In Revenue
+First Calculate previous year Net Revenue
+*Previous_Year_YTD_Revenue = CALCULATE([YTD Net Revenue],SAMEPERIODLASTYEAR('Dim Date'[Month End Date].[Date]))
+Now calculate year to date(month to month) change Percentage
+*YOY_Percetage_Change_In_YTD_NetRevenue = DIVIDE([YTD Net Revenue]-[Previous_Year_YTD_Revenue],[Previous_Year_YTD_Revenue])
+
+#
+#
+
+IMP POINT
+*Difference Between previous Year Revenue And Previous Year Revenue ytd
+#For Previous_Year_Revenue:
+If the current context is March 2021, this measure will return the revenue for March 2020.
+
+#For Previous_Year_YTD_Revenue:
+If the current context is March 2021, this measure will return the cumulative revenue from January 2020 to March 2020.
+
+#
+#
+
+12:Calculate to find percentage of gross profit
+*Gross_Profit% = [Gross Profit]/[Net Revenue]
+
+13:Calculate to find percentage of EBITDA
+*EBITDA% = [EBITDA]/[Net Revenue]
+
+14:Calculate to find percentage of PAT
+*PAT% = [Pat]/[Net Revenue]
+
+15:Calculate Total Raw Material cost
+*Raw_Material_Cost = SUM(Actual[Raw Material])*-1
+#we have multiply it with -1 Because We Want our cost In Positive
+
+16:Calculate Total Fixed And Variable Cost
+*Total Fixed And Variable cost = SUM(Actual[Total Fixed & Variable Cost])*-1
+#we have multiply it with -1 Because We Want our cost In Positive
+
+17:Calculate Total Sale And Distribution Cost
+*Total s&d Cost = CALCULATE(SUM(Actual[S&D])*-1)
+#we have multiply it with -1 Because We Want our cost In Positive
+
+
+18:Calculate General And Administrative Cost
+*General And Administrative Cost = CALCULATE(SUM(Actual[G&A])*-1)
+#we have multiply it with -1 Because We Want our cost In Positive
+
+19:Raw material cost percetage and use on line and stack column chart
+*Raw_Material_% = [Raw_Material_Cost]/[Net Revenue]
+
+
+20:3 page pur sku ka percentage bataya gya hai ka wo kitna contribute karha hai aur kitna percentage revenue contribute karha hai.
+
+21:4 Page Pur how many difference is between net revenue for actual and net revenue for budget. What is percentage change between them?
+#First calulate whole value difference then percentage change
+*Net_Revenue_Difference = [Net Revenue]-[Net_Revenue_Budget]
+#Now calculate percentage change
+*Net_Revenue_Percentage_Change = 
+DIVIDE(
+    [Net_Revenue_Difference], 
+    [Net_Revenue_Budget], 
+    0
+)
+
+#OPTIMIZATION OF BUSINESS
+Q1:Height of bar show sku and width of bar show revenue using mekko chart
+Use tree map instead of meeko chart because not availale on my BI
+
+
+Q2:Pareto Analysis:
+Jis business mei volume kum hoo aur value zyada hoo E.G gold business mei volume kum sale hoo tub bhi value zyada milti hai 
+Question: 4208 sku mei sa konsa 20% sku hai jo contribute karha hai 80 % revenue, konsa 80% sku hai jo 20% revenue mei contribute karha hai.
+First We Have To Find Top SKU
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://www.linkedin.com/feed/update/urn:li:activity:7217033457493823488/?origin=SHARED_BY_YOUR_NETWO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
